@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
+const gm = require('gm').subClass({imageMagick: true});
 const easyimg = require('easyimage');
 const deferred = require('deferred');
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 app.get('/:width/:height', (req, res) => {
   let width = req.params.width;
   let height = req.params.height;
+  // res.send(getRandomFileName());
   let path = getImageFilename(width, height)
     .then(function (path) {
       res.sendFile(path);
@@ -60,22 +62,59 @@ var getImageFilename = (width, height, args) => {
 
 var genImage = (width, height, path) => {
   let q = deferred();
+  let higher;
+  higher = (width > height ? width : height);
+  let imageRandomFilePath= imageSourcePath + getRandomFileName();
 
-  easyimg.rescrop({
-     src: imageSourcePath + 'trumpdonald--600x600.jpg', dst: path,
-     width:600, height:600,
-     cropwidth:width, cropheight:height,
-     x:0, y:0
-  }).then(
-  function(image) {
-     q.resolve(path);
-  },
-  function (err) {
-    q.reject(err);
-  }
-);
+  getDimensionsImage(imageRandomFilePath)
+  .then(function (data) {
+      easyimg.rescrop({
+         src: imageRandomFilePath , dst: path,
+         width:data.width, height:data.height,
+         cropwidth:width, cropheight:height,
+         x:0, y:0
+        }).then(
+        function(image) {
+           q.resolve(path);
+        },
+        function (err) {
+          q.reject(err);
+        }
+      );
+    },
+    function (err) {
+
+    }
+  )
 
   return q.promise;
+}
+
+var getDimensionsImage = (path) => {
+  console.log("getDimensionsImage");
+  console.log("path: ", path);
+  let q = deferred();
+  gm(path)
+    .size(function (err, size) {
+
+      if (err){
+        console.log(err);
+        q.reject(err);
+      }
+      else {
+        console.log("suc");
+        q.resolve(size);
+        console.log('width = ' + size.width);
+        console.log('height = ' + size.height);
+      }
+    });
+    return q.promise;
+}
+
+var getRandomFileName = () => {
+  var q = deferred();
+  var files = fs.readdirSync(imageSourcePath);
+  return files[Math.floor(Math.random() * files.length)];
 }
 
 var fileExist = (filepath) => {
