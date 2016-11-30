@@ -10,8 +10,10 @@ const deferred = require('deferred');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
 const imageSourcePath = (__dirname + '/images/source/');
 const imageGeneratedPath = (__dirname + '/images/generated/');
+const maxCacheTime = 3105200;
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -68,9 +70,11 @@ var genImage = (width, height, path) => {
 
   getDimensionsImage(imageRandomFilePath)
   .then(function (data) {
+      let objNormalized = getNormalizedDimensions(higher, data);
+      console.log("objNormalized: ", objNormalized);
       easyimg.rescrop({
          src: imageRandomFilePath , dst: path,
-         width:data.width, height:data.height,
+         width:objNormalized.width, height:objNormalized.height,
          cropwidth:width, cropheight:height,
          x:0, y:0
         }).then(
@@ -88,6 +92,17 @@ var genImage = (width, height, path) => {
   )
 
   return q.promise;
+};
+
+var getNormalizedDimensions = (dim, obj) => {
+  let smaller = (obj.width < obj.height ? obj.width : obj.height);
+  console.log("smaller: ", smaller);
+  let ratio = smaller / dim;
+  let result = {};
+  result.width = obj.width*ratio;
+  result.height = obj.height*ratio;
+
+  return result;
 }
 
 var getDimensionsImage = (path) => {
@@ -112,7 +127,6 @@ var getDimensionsImage = (path) => {
 }
 
 var getRandomFileName = () => {
-  var q = deferred();
   var files = fs.readdirSync(imageSourcePath);
   return files[Math.floor(Math.random() * files.length)];
 }
