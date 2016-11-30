@@ -83,7 +83,7 @@ var genImage = (width, height, path) => {
       );
     },
     function (err) {
-
+      q.reject(err);
     }
   )
 
