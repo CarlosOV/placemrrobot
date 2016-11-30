@@ -19,6 +19,8 @@
   "homepage": "https://github.com/CarlosOV/placetrump#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "deferred": "^0.7.5",
+    "easyimage": "^2.1.0",
     "express": "^4.14.0"
   },
   "devDependencies": {
