@@ -20,6 +20,7 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "deferred": "^0.7.5",
+    "del": "^2.2.2",
     "easyimage": "^2.1.0",
     "express": "^4.14.0",
     "gm": "^1.23.0"

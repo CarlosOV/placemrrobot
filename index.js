@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
+const del = require('del');
 const gm = require('gm').subClass({imageMagick: true});
 const easyimg = require('easyimage');
 const deferred = require('deferred');
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 app.use('/static', express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => {
+  // removeImagesGenerated();
   res.sendFile(path.join(__dirname + '/public', 'home.html'));
 });
 
@@ -138,6 +140,12 @@ var fileExist = (filepath) => {
   catch (err) {
     return false;
   }
+}
+
+var removeImagesGenerated = () => {
+  del([imageGeneratedPath+'*.jpg']).then(paths => {
+    console.log('Archivos eliminados :\n', paths.join('\n'));
+  });
 }
 
 app.listen(port, () => {
