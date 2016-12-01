@@ -97,7 +97,7 @@ var genImage = (width, height, path) => {
 var getNormalizedDimensions = (dim, obj) => {
   let smaller = (obj.width < obj.height ? obj.width : obj.height);
   console.log("smaller: ", smaller);
-  let ratio = smaller / dim;
+  let ratio = dim / smaller;
   let result = {};
   result.width = obj.width*ratio;
   result.height = obj.height*ratio;
