@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const del = require('del');
 const gm = require('gm').subClass({imageMagick: true});
+const sharp = require('sharp');
 const easyimg = require('easyimage');
 const deferred = require('deferred');
 
@@ -14,7 +15,19 @@ const port = process.env.PORT || 3000;
 
 const imageSourcePath = (__dirname + '/images/source/');
 const imageGeneratedPath = (__dirname + '/images/generated/');
-const maxCacheTime = 3105200;
+const imageTmpPath = (__dirname + '/images/tmp/');
+const maxCacheTime = 10*60*60*1000;
+// const maxCacheTime = 10*1000;
+
+var removeImagesGenerated = () => {
+  setInterval(function () {
+    del([imageGeneratedPath+'*.jpg', imageTmpPath+'*.jpg']).then(paths => {
+      console.log('Archivos eliminados :\n', paths.join('\n'));
+    });
+  }, maxCacheTime);
+};
+
+removeImagesGenerated();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -29,22 +42,33 @@ app.get('/', (req, res) => {
 app.get('/:width/:height', (req, res) => {
   let width = req.params.width;
   let height = req.params.height;
-  // res.send(getRandomFileName());
   let path = getImageFilename(width, height)
     .then(function (path) {
       res.sendFile(path);
     }, function (err) {
       res.send(err);
     });
-  // res.send(path);
-  // res.send(`width: ${width}, height: ${height}`);
+});
+
+app.get('/g/:width/:height', (req, res) => {
+  let width = req.params.width;
+  let height = req.params.height;
+  let path = getImageFilename(width, height, 'g')
+    .then(function (path) {
+      res.sendFile(path);
+    }, function (err) {
+      res.send(err);
+    });
 });
 
 var getImageFilename = (width, height, args) => {
   let path = imageGeneratedPath;
+  let tmpPath = imageTmpPath;
   path += (args == 'g' ? "grayscale": "");
-  path += (args == 'c' ? "crazy": "");
+  tmpPath += (args == 'g' ? "grayscale": "");
+  // path += (args == 'c' ? "crazy": "");
   path += `#${width}#${height}.jpg` ;
+  tmpPath += `#${width}#${height}.jpg` ;
 
   let q = deferred();
 
@@ -52,7 +76,7 @@ var getImageFilename = (width, height, args) => {
     q.resolve(path);
   }
   else{
-    genImage(width, height, path).
+    genImage(width, height, path, tmpPath, args).
       then(function (path) {
         q.resolve(path);
       },function (err) {
@@ -64,24 +88,26 @@ var getImageFilename = (width, height, args) => {
 
 };
 
-var genImage = (width, height, path) => {
+var genImage = (width, height, path, tmpPath, filter) => {
   let q = deferred();
-  let higher;
-  higher = (width > height ? width : height);
-  let imageRandomFilePath= imageSourcePath + getRandomFileName();
+  let higher = (width > height ? width : height);
+  let imageRandomFilePath = imageSourcePath + getRandomFileName();
 
   getDimensionsImage(imageRandomFilePath)
   .then(function (data) {
       let objNormalized = getNormalizedDimensions(higher, data);
-      console.log("objNormalized: ", objNormalized);
       easyimg.rescrop({
-         src: imageRandomFilePath , dst: path,
+         src: imageRandomFilePath , dst: (filter ? tmpPath:path),
          width:objNormalized.width, height:objNormalized.height,
          cropwidth:width, cropheight:height,
          x:0, y:0
         }).then(
         function(image) {
-           q.resolve(path);
+          applyFilter(path, tmpPath ,filter).then(function () {
+            q.resolve(path);
+          }, function (err) {
+            q.reject(err)
+          });
         },
         function (err) {
           q.reject(err);
@@ -96,9 +122,26 @@ var genImage = (width, height, path) => {
   return q.promise;
 };
 
+var applyFilter = (path, tmpPath ,filter) => {
+  var q = deferred();
+  if(filter){
+    if(filter == "g"){
+      var r = sharp(tmpPath)
+                .grayscale()
+                .toFile(path, function (err, data) {
+                  if(err)q.reject(err);
+                  q.resolve(data);
+                });
+    }
+  }
+  else {
+    q.resolve("no filter");
+  }
+  return q.promise;
+}
+
 var getNormalizedDimensions = (dim, obj) => {
   let smaller = (obj.width < obj.height ? obj.width : obj.height);
-  console.log("smaller: ", smaller);
   let ratio = dim / smaller;
   let result = {};
   result.width = obj.width*ratio;
@@ -108,21 +151,15 @@ var getNormalizedDimensions = (dim, obj) => {
 }
 
 var getDimensionsImage = (path) => {
-  console.log("getDimensionsImage");
-  console.log("path: ", path);
   let q = deferred();
   gm(path)
     .size(function (err, size) {
 
       if (err){
-        console.log(err);
         q.reject(err);
       }
       else {
-        console.log("suc");
         q.resolve(size);
-        console.log('width = ' + size.width);
-        console.log('height = ' + size.height);
       }
     });
     return q.promise;
@@ -140,12 +177,6 @@ var fileExist = (filepath) => {
   catch (err) {
     return false;
   }
-}
-
-var removeImagesGenerated = () => {
-  del([imageGeneratedPath+'*.jpg']).then(paths => {
-    console.log('Archivos eliminados :\n', paths.join('\n'));
-  });
 }
 
 app.listen(port, () => {

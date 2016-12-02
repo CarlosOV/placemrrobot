@@ -1,5 +1,5 @@
 {
-  "name": "placetrump",
+  "name": "placemrrobot",
   "version": "1.0.0",
   "description": "Placeholder image for Trump",
   "main": "index.js",
@@ -9,21 +9,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CarlosOV/placetrump.git"
+    "url": "git+https://github.com/CarlosOV/placemrrobot.git"
   },
   "author": "Carlos Ormeño Vargas",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/CarlosOV/placetrump/issues"
+    "url": "https://github.com/CarlosOV/placemrrobot/issues"
   },
-  "homepage": "https://github.com/CarlosOV/placetrump#readme",
+  "homepage": "https://github.com/CarlosOV/placemrrobot#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
     "deferred": "^0.7.5",
     "del": "^2.2.2",
     "easyimage": "^2.1.0",
     "express": "^4.14.0",
-    "gm": "^1.23.0"
+    "gm": "^1.23.0",
+    "sharp": "^0.16.2"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
