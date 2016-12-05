@@ -39,9 +39,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/public', 'home.html'));
 });
 
-app.get('/:width/:height', (req, res) => {
+app.get('/:width/:height', (req, res, next) => {
+
   let width = req.params.width;
   let height = req.params.height;
+  if(width > 3500 || height > 3500)return next("max-limit");
   let path = getImageFilename(width, height)
     .then(function (path) {
       res.sendFile(path);
@@ -53,6 +55,7 @@ app.get('/:width/:height', (req, res) => {
 app.get('/g/:width/:height', (req, res) => {
   let width = req.params.width;
   let height = req.params.height;
+  if(width > 3500 || height > 3500)return next("max-limit");
   let path = getImageFilename(width, height, 'g')
     .then(function (path) {
       res.sendFile(path);
@@ -60,6 +63,15 @@ app.get('/g/:width/:height', (req, res) => {
       res.send(err);
     });
 });
+
+app.use((err, req, res, next) => {
+  console.log("err", err);
+  if(err == "max-limit"){
+    console.log("lol");
+    return res.status(500).send("El width y el height deben ser menores o iguales a 3500");
+  }
+  res.end()
+})
 
 var getImageFilename = (width, height, args) => {
   let path = imageGeneratedPath;
