@@ -32,3 +32,15 @@ h1.title{
   vertical-align: top;
   width: 48.5%;
 }
+
+.usage__item p:first-child{
+  text-align: left;
+}
+
+.usage__item img{
+  max-width: 100%;
+}
+
+.u-text-center{
+  text-align: center;;
+}
