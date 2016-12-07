@@ -49,6 +49,59 @@ h1.title{
   margin: auto;
 }
 
+.usage__item__image{
+  display: inline-block;
+  position: relative;
+  font-size: 0;
+  cursor: pointer;
+}
+
+.normal{
+  display: block;
+}
+
+.clicked{
+  display: none;
+}
+
+.usage__item__overlay{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  color: #fff;
+  top: 0;
+  left: 0;
+  font-size: 32px;
+  font-weight: bold;
+  opacity: 0;
+}
+
+.usage__item__overlay:hover{
+  background-color: rgba(0,0,0,.5);
+  opacity: 1;
+}
+
+.usage__item__overlay:after{
+  content: "";
+  width: 0;
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.usage__item__overlay:active .normal{
+  display: none;
+}
+
+.usage__item__overlay:active .clicked{
+  display: block;
+}
+
+.usage__item__content{
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .u-text-center{
   text-align: center;;
 }
