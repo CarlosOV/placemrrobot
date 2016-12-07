@@ -1,0 +1,21 @@
+{
+  "name": "placemrrobot",
+  "description": "Placeholder image for Mr Robot",
+  "main": "index.js",
+  "authors": [
+    "Carlos Ormeño Vargas"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/CarlosOV/placemrrobot",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "clipboard": "~1.5.15"
+  }
+}

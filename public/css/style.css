@@ -41,6 +41,34 @@ h1.title{
   max-width: 100%;
 }
 
+.usage__item__code{
+  border: 1px solid rgba(0,0,0,.3);
+  border-radius: 20px;
+  padding: 10px;
+  max-width: 500px;
+  margin: auto;
+}
+
 .u-text-center{
   text-align: center;;
+}
+
+
+@media screen and (max-width:992px){
+  .usage__item{
+    width: 90%;
+  }
+}
+
+@media screen and (max-width:640px){
+  .usage__item{
+    width: 100%;
+  }
+}
+
+@media screen and (max-width:480px){
+  .usage__item__code{
+    padding: 10px 4px;
+    font-size: 12px;
+  }
 }

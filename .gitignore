@@ -3,3 +3,4 @@ bower_components
 .idea
 images/generated
 images/tmp
+public/lib

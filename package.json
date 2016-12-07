@@ -1,7 +1,7 @@
 {
   "name": "placemrrobot",
   "version": "1.0.0",
-  "description": "Placeholder image for Trump",
+  "description": "Placeholder image for Mr Robot",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
