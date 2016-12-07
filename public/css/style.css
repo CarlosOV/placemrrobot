@@ -27,6 +27,10 @@ h1.title{
   font-size: 2em;
 }
 
+.usage{
+  padding: 1rem 0;
+}
+
 .usage__item{
   display: inline-block;
   vertical-align: top;
@@ -42,11 +46,11 @@ h1.title{
 }
 
 .usage__item__code{
-  border: 1px solid rgba(0,0,0,.3);
+  border: 1px solid rgba(0,0,0,.2);
   border-radius: 20px;
   padding: 10px;
   max-width: 500px;
-  margin: auto;
+  margin: 2.4rem auto;
 }
 
 .usage__item__image{
@@ -89,6 +93,10 @@ h1.title{
   vertical-align: middle;
 }
 
+.usage__item__overlay:active{
+  background-color: rgba(0,0,0,.8);
+}
+
 .usage__item__overlay:active .normal{
   display: none;
 }
@@ -106,6 +114,17 @@ h1.title{
   text-align: center;;
 }
 
+.footer{
+  background-color: #2C2C2C;
+  color: #fff;
+  padding: 1rem 0;
+}
+
+.footer a{
+  color: rgb(115,202,153);
+  text-decoration: none;
+  font-weight: bold;
+}
 
 @media screen and (max-width:992px){
   .usage__item{
