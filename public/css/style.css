@@ -14,7 +14,27 @@ body{
   padding: 6em 0;
   text-align: center;
   color: #fff;
+  position: relative;
+  z-index: 0;
+}
+
+.banner__image{
+  -webkit-filter: blur(4px);
+  filter: blur(4px);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: -1;
   box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.5);
+  transition: .25s -webkit-filter ease-in-out;
+  transition: .25s filter ease-in-out;
+}
+
+.banner:hover .banner__image{
+  -webkit-filter: blur(0);
+  filter: blur(0);
 }
 
 h1.title{
