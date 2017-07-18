@@ -1,6 +1,6 @@
 # PlaceMrRobot
 
-Images Placeholder from Mr Robot. Demo [placemrrobot](http://placemrrobot.com/)
+Placeholder Images from Mr Robot. Demo [placemrrobot](http://placemrrobot.com/)
 
 ## Getting Started
 
